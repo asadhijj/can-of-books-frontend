@@ -27,7 +27,7 @@ class BestBooks extends React.Component {
   /* TODO: Make a GET request to your API to fetch all the books from the database  */
   componentDidMount = () => {
     axios
-      .get("http://localhost:3001/books")
+      .get("https://my-books-can.herokuapp.com/books")
       .then((result) => {
         this.setState({
           books: result.data,
@@ -46,7 +46,7 @@ class BestBooks extends React.Component {
       status: event.target.bookStatus.value,
     };
     axios
-      .post(`http://localhost:3001/books`, obj)
+      .post(`https://my-books-can.herokuapp.com/books`, obj)
       .then((result) => {
         this.setState({
           books: result.data,
@@ -58,7 +58,7 @@ class BestBooks extends React.Component {
   };
   deleteBook = (id) => {
     axios
-      .delete(`http://localhost:3001/books/${id}`) //http://localhost:3001/deleteBook?id=${id}
+      .delete(`https://my-books-can.herokuapp.com/books/${id}`) //http://localhost:3001/deleteBook?id=${id}
       .then((result) => {
         this.setState({
           books: result.data,
