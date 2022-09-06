@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import Updated from './UpdateForm';
 import 'bootstrap/dist/css/bootstrap.css';
 import Carousel from 'react-bootstrap/Carousel';
 import { Modal, Button, Form } from "react-bootstrap";
@@ -9,7 +10,9 @@ class BestBooks extends React.Component {
     super(props);
     this.state = {
       books: [],
-      show: "false",
+      show: false,
+      showFlag : false,
+      currentBooks : {},
     };
   }
   handleShow = () => {
@@ -23,6 +26,19 @@ class BestBooks extends React.Component {
       show: false,
     });
   };
+
+  updateHandleShow =(item) => {
+    this.setState ({
+      showFlag : true,
+      currentBooks : item
+    })
+  }
+
+  updateHandleClose = () => {
+    this.setState ({
+      showFlag : false
+    })
+  }
 
   /* TODO: Make a GET request to your API to fetch all the books from the database  */
   componentDidMount = () => {
@@ -69,6 +85,27 @@ class BestBooks extends React.Component {
       });
   };
 
+  updateBook = (event) =>{
+    event.preventDefault();
+    let obj = {
+      title: event.target.bookTitle.value,
+      description: event.target.bookDescription.value,
+      status: event.target.bookStatus.value,
+    }
+    const id = this.state.currentBooks._id;
+    axios
+    .put(`https://my-books-can.herokuapp.com/books/${id}`, obj)
+    .then(result=>{
+      this.setState({
+        books : result.data
+      })
+      this.updateHandleClose();
+    })
+    .catch(err=>{
+      console.log(err);
+    })
+  }
+
   render() {
     /* TODO: render all the books in a Carousel */
 
@@ -97,11 +134,26 @@ class BestBooks extends React.Component {
                         >
                           Delete
                         </Button>
+
+                        <Button
+                          variant="outline-light"
+                          onClick={() => this.updateHandleShow(item)}
+                        >
+                          Update This Book!
+                        </Button>
+
                       </Carousel.Caption>
                     </Carousel.Item>
                   );
                 })}
               </Carousel>
+              <Updated
+                show={this.state.showFlag}
+                updateHandleClose={this.updateHandleClose}
+                updateHandleShow={this.updateHandleShow}
+                updateBook={this.updateBook}
+                currentBooks={this.state.currentBooks}
+               />
             </div>
           ) : (
             <h3>No Books Found :(</h3>
