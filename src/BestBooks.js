@@ -4,6 +4,7 @@ import Updated from './UpdateForm';
 import 'bootstrap/dist/css/bootstrap.css';
 import Carousel from 'react-bootstrap/Carousel';
 import { Modal, Button, Form } from "react-bootstrap";
+import { withAuth0 } from '@auth0/auth0-react';
 
 class BestBooks extends React.Component {
   constructor(props) {
@@ -56,10 +57,12 @@ class BestBooks extends React.Component {
 
   addBook = (event) => {
     event.preventDefault();
+    const { user } = this.props.auth0;
     const obj = {
       title: event.target.bookTitle.value,
       description: event.target.bookDescription.value,
       status: event.target.bookStatus.value,
+      userName : user.email,
     };
     axios
       .post(`https://my-books-can.herokuapp.com/books`, obj)
@@ -73,8 +76,9 @@ class BestBooks extends React.Component {
       });
   };
   deleteBook = (id) => {
+    const { user } = this.props.auth0;
     axios
-      .delete(`https://my-books-can.herokuapp.com/books/${id}`) //http://localhost:3001/deleteBook?id=${id}
+      .delete(`https://my-books-can.herokuapp.com/books/${id}?userName=${user.email}`) //http://localhost:3001/deleteBook?id=${id}
       .then((result) => {
         this.setState({
           books: result.data,
@@ -87,10 +91,12 @@ class BestBooks extends React.Component {
 
   updateBook = (event) =>{
     event.preventDefault();
+    const { user } = this.props.auth0;
     let obj = {
       title: event.target.bookTitle.value,
       description: event.target.bookDescription.value,
       status: event.target.bookStatus.value,
+      userName : user.email
     }
     const id = this.state.currentBooks._id;
     axios
@@ -232,4 +238,4 @@ class BestBooks extends React.Component {
 }
 
   
-export default BestBooks;
+export default  withAuth0(BestBooks);
