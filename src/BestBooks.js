@@ -43,8 +43,10 @@ class BestBooks extends React.Component {
 
   /* TODO: Make a GET request to your API to fetch all the books from the database  */
   componentDidMount = () => {
+    const { user } = this.props.auth0;
+
     axios
-      .get("https://my-books-can.herokuapp.com/books")
+      .get(`https://my-books-can.herokuapp.com/books?userName=${user.email}`)
       .then((result) => {
         this.setState({
           books: result.data,

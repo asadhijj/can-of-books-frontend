@@ -28,7 +28,7 @@ class App extends React.Component {
             </Route>
             <Route 
               exact path="/profile"
-              element={ isAuthenticated && <Profile/>}
+              element={ isAuthenticated && <Profile/> }
             >
             </Route>
             {/* PLACEHOLDER: add a route with a path of '/about' that renders the `About` component */}
